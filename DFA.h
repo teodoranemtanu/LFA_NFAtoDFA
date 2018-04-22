@@ -24,8 +24,8 @@ protected:
     vector<string> S;
 public:
     DFA();
+    void appendState(string x);
 
-    //   virtual ifstream & read(ifstream & fin);
     void setInitialState(string x);
 
     string getInitialState();
@@ -37,8 +37,6 @@ public:
     void increaseNrFinalStates(int x);
 
     void setNrStates(int x);
-
-    void increaseNrStates(int x);
 
     void setTransition(pair<string, char> p, string x);
 

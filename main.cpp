@@ -9,10 +9,11 @@ ofstream fout("..\\dfa.out");
 int main() {
     NFA n;
     DFA &N = n;
-    DFA M;
     fin >> N;
-    M = n.convertion();
-    fout << M.isFinal("2");
+    DFA M;
+    n.convertion(M, fout);
+    fout << M;
+
     return 0;
 
 }
