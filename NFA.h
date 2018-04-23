@@ -10,7 +10,7 @@ using namespace std;
 class NFA : public DFA {
 public:
     ifstream &read(ifstream &fin);
-    void convertion(DFA &, ofstream &);
+    DFA convertion();
 };
 
 #endif //UNTITLED_NFA_H

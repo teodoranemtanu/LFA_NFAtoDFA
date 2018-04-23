@@ -22,13 +22,25 @@ protected:
     int nrStates, nrFinalStates, nrTransitions;
     string alphabet;
     vector<string> S;
+
 public:
     DFA();
+
+    DFA(string x);
+
+    DFA(const DFA &a);
+
+    DFA &operator=(const DFA &a);
+
+    ~DFA();
+
     void appendState(string x);
 
     void setInitialState(string x);
 
-    string getInitialState();
+    int getNrStates();
+
+    string getInitialState() const;
 
     bool isFinal(string x);
 
@@ -41,6 +53,8 @@ public:
     void setTransition(pair<string, char> p, string x);
 
     virtual ifstream &read(ifstream &fin);
+
+    ofstream &print(ofstream &fout);
 
     friend ifstream &operator>>(ifstream &fin, DFA &N);
 

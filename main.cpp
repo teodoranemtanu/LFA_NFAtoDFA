@@ -1,4 +1,5 @@
 #include <fstream>
+#include <iostream>
 #include "NFA.h"
 
 using namespace std;
@@ -8,12 +9,9 @@ ofstream fout("..\\dfa.out");
 
 int main() {
     NFA n;
-    DFA &N = n;
-    fin >> N;
-    DFA M;
-    n.convertion(M, fout);
-    fout << M;
-
+    fin >> (DFA&)n;
+    DFA d = n.convertion();
+    fout << d;
     return 0;
 
 }

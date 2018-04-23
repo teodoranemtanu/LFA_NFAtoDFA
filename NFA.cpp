@@ -3,34 +3,35 @@
 //
 
 #include "NFA.h"
+#include <iostream>
 
- void NFA:: convertion(DFA & N, ofstream & fout) {
+DFA NFA::convertion() {
+    DFA N(alphabet);
     queue<string> states;
     states.push(initialState);
     map<string, bool> viz;
-    N.setInitialState(initialState);
-    N.setNrStates(1);
-    viz[initialState] = true;
-
-     fout << N.getInitialState() << " \n";
+    viz["*"] = true;
     while (!states.empty()) {
         bool final = false;
         string currentState = states.front();
         states.pop();
-        N.appendState(currentState);
-        fout << currentState << " ";
-        for (int i = 0; i < currentState.size(); i++) {
+        if(currentState!= "") N.appendState(currentState); // adds the current state to the new automaton,
+        // being certain that it hasnt been added before
+
+        for (int i = 0; i < currentState.size(); i++) { // verifies if this state is final for the new autom.
+            // by checking if at least one of its components is a final state for the NFA
             string c;
             c.push_back(currentState[i]);
             if (isFinal(c))
                 final = true;
         }
-        if(final == true){
+        if (final == true) {
             N.increaseNrFinalStates(1);
             N.setFinal(currentState);
         }
 
-        if (find(S.begin(), S.end(), currentState) != S.end()) {
+        if (find(S.begin(), S.end(), currentState) != S.end()) { // if the current state can be found in the initial
+            // list of states (one-lettered words) then its list of transitions will be copied
             for (int i = 0; i < alphabet.size(); i++) {
                 pair<string, char> p;
                 p.first = currentState;
@@ -38,10 +39,10 @@
                 N.setTransition(p, M[p]);
                 if (viz[M[p]] == false) {
                     states.push(M[p]);
-                    viz[M[p]] = 1;
+                    viz[M[p]] = true;
                 }
             }
-        } else {
+        } else { // otherwise a reunion of the transitions of the components will be made
             for (int i = 0; i < alphabet.size(); i++) {
                 pair<string, char> p;
                 p.first = currentState;
@@ -53,24 +54,36 @@
                     q.first = currentState[j];
                     q.second = alphabet[i];
 
-                    if (M[q] != "*" && newState.find(M[q]) == -1) {
+                    if (M[q] != "*" && newState.find(M[q]) == string::npos) {
                         newState = newState + M[q];
+                        auto last = newState.end();
+                        for (auto first = newState.begin(); first != last; ++first) {
+                            last = remove(next(first), last, *first);
+                        }
+                        newState.erase(last, newState.end());
                     }
-                    sort(newState.begin(), newState.end());
+                    sort(newState.begin(),
+                         newState.end()); // we want to keep them ordered so as not to put a state twice
                 }
+
                 N.setTransition(p, newState);
+
                 if (viz[newState] == false) {
                     viz[newState] = true;
-                    states.push(newState);
+                    states.push(newState); // new states will be added to the queue only if they
+                    // haven't been in the queue before
                 }
             }
         }
 
     }
+
+    return N;
 }
 
 ifstream &NFA::read(ifstream &fin) {
     fin >> alphabet;
+    fin >> initialState;
     fin >> nrStates >> nrTransitions >> nrFinalStates;
     for (int i = 0; i < nrStates; i++) {
         char x;
@@ -102,10 +115,10 @@ ifstream &NFA::read(ifstream &fin) {
         fin >> q1 >> c >> q2;
         p.first = q1;
         p.second = c;
-        if(M[p] == "*") {
+        if (M[p] == "*") {
             M[p] = q2;
         } else {
-            M[p]= M[p]+ q2;
+            M[p] = M[p] + q2;
         }
     }
     return fin;
