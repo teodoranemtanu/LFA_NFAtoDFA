@@ -14,6 +14,7 @@ DFA NFA::convertion() {
     states.push(initialState);
     map<string, bool> viz;
     viz["*"] = true;
+    viz[initialState] = true;
     while (!states.empty()) {
         bool final = false;
         string currentState = states.front();
@@ -130,4 +131,47 @@ ifstream &NFA::read(ifstream &fin) {
         }
     }
     return fin;
+}
+
+bool NFA :: testWord(string word){
+
+    if (word=="#" && !finalStates[initialState]) { // test for the void word
+        return false;
+    }
+
+    pair<string, char> p;
+    string currentStates;
+    string nextStates;
+
+    currentStates.append(initialState); // initially only the initialState can be counted as current state
+
+    for (int i = 0; i < word.size(); i++) {
+        p.second = word[i];
+        bool ok = 0;
+        for (int j = 0; j < currentStates.size(); j++) {
+            // for a current letter, I move taking into account the current states and I try to find the next ones
+            p.first = currentStates[j];
+            if(M[p]!="*") {
+                nextStates.append(M[p]);
+            }else ok++;
+            //which I concatenate to the vector of next states
+            if (ok == currentStates.size()) return false;
+            // if for a certain letter I don't have any next states, then I don't accept the word
+        }
+        currentStates = nextStates;
+        nextStates.clear();
+    }
+
+    for (int i = 0; i < currentStates.size(); i++){
+        string dummy;
+        dummy.push_back(currentStates[i]);
+        if (finalStates[dummy]) { //I accept the word only if one of the states found as valid is also final
+            currentStates.clear();
+            return true;
+        }
+    }
+
+    currentStates.clear();
+    return false;
+
 }

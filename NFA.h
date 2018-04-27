@@ -11,6 +11,7 @@ class NFA : public DFA {
 public:
     ifstream &read(ifstream &fin);
     DFA convertion();
+    bool testWord(string word);
 };
 
 #endif //UNTITLED_NFA_H
