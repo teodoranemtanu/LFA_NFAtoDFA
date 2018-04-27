@@ -4,7 +4,10 @@
 
 #include "NFA.h"
 #include <iostream>
-
+/**
+ * makes the conversion from a nfa to dfa
+ * @return
+ */
 DFA NFA::convertion() {
     DFA N(alphabet);
     queue<string> states;
@@ -80,7 +83,12 @@ DFA NFA::convertion() {
 
     return N;
 }
-
+/**
+ *
+ * @param fin - the input file
+ * @return
+ * reads a nfa
+ */
 ifstream &NFA::read(ifstream &fin) {
     fin >> alphabet;
     fin >> initialState;

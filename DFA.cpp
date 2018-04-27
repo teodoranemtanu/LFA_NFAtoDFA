@@ -41,7 +41,9 @@ DFA &DFA::operator=(const DFA &a) {
     }
     return *this;
 }
-
+/**
+ *
+ */
 DFA::~DFA() {
     map<pair<string, char>, string> M;
     map<string, bool> finalStates;
@@ -78,6 +80,13 @@ int DFA::getNrStates() {
     return S.size();
 }
 
+/**
+ *
+ * @param x.first - state from which a transition starts
+ * x.second - the character with whom the transition is made
+ * @param y - the state where the transition goes to
+ * marks in the map with transitions that the automaton has a state from x.first to y with the character x.second
+ */
 void DFA::setTransition(pair<string, char> x, string y) {
     M[x] = y;
     nrTransitions++;
@@ -87,6 +96,10 @@ void DFA::setNrStates(int x) {
     nrStates = x;
 }
 
+/**
+ * inserts x in the list of states of the automaton
+ * @param x - string to be included in the automaton's set of states
+ */
 void DFA::appendState(string x) {
     nrStates++;
     S.push_back(x);
@@ -101,6 +114,12 @@ ifstream &operator>>(ifstream &fin, DFA &N) {
     return fin;
 }
 
+/**
+ *
+ * @param fout - the output file
+ * @param N - the nfa which has been converted to a dfa
+ * @return
+ */
 ofstream &operator<<(ofstream &fout, DFA &N) {
     fout << "The alphabet of the automaton is: " << N.alphabet << "\n";
     fout << "The automaton has " << N.nrStates << " states, from which " << N.nrFinalStates << " are final. \n";
